@@ -1,0 +1,28 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  // url здесь больше не указываем для Prisma 7 + Driver Adapters
+}
+
+model Card {
+  id         String      @id @default(uuid())
+  ico        String
+  name       String
+  desc       String
+  bonus      Int
+  link       String
+  margin     Float
+  percent    Float
+  advantages Advantage[]
+}
+
+model Advantage {
+  id        Int    @id @default(autoincrement())
+  stat      String
+  cardId    String
+  card      Card   @relation(fields: [cardId], references: [id])
+}
