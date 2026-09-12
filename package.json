@@ -8,6 +8,12 @@
   "type": "module",
   "scripts": {
     "build": "nest build",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d",
+    "db:logs": "docker compose logs -f db",
+    "db:migrate": "prisma migrate deploy",
+    "db:studio": "prisma studio",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

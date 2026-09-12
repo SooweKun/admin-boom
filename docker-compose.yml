@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: boom-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-boom}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-boom}
+      POSTGRES_DB: ${POSTGRES_DB:-boom}
+      # Держим БД в UTC, чтобы даты ставок не зависели от таймзоны машины.
+      TZ: UTC
+      PGTZ: UTC
+    ports:
+      # Наружу можно вынести другой порт через POSTGRES_PORT в .env,
+      # если 5432 уже занят локально установленным Postgres.
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - boom-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-boom} -d ${POSTGRES_DB:-boom}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  boom-db-data:
