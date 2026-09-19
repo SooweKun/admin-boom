@@ -7,9 +7,14 @@ import { CreateCardDto, UpdateCardDto } from '../dto.js';
 export class CardService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  /**
+   * По умолчанию отдаёт только видимые карточки — это то, что показывает приложение.
+   * Админка запрашивает `includeHidden`, чтобы видеть и скрытые.
+   */
+  async findAll(includeHidden = false) {
     try {
       return await this.prisma.card.findMany({
+        where: includeHidden ? undefined : { isVisible: true },
         include: {
           advantages: true,
         },
@@ -88,8 +93,9 @@ export class CardService {
       throw new NotFoundException(`Card with id ${id} not found`);
     }
 
-    return this.prisma.card.delete({
-      where: { id },
-    });
+    return this.prisma.$transaction([
+      this.prisma.advantage.deleteMany({ where: { cardId: id } }),
+      this.prisma.card.delete({ where: { id } }),
+    ]);
   }
 }

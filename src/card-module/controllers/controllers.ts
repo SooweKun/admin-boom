@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateCardDto, UpdateCardDto } from '../dto.js';
 import { CardService } from '../services/services.js';
@@ -22,8 +23,8 @@ export class CardController {
   }
 
   @Get()
-  async findAll() {
-    return this.cardService.findAll();
+  async findAll(@Query('includeHidden') includeHidden?: string) {
+    return this.cardService.findAll(includeHidden === 'true');
   }
 
   @Get(':id')

@@ -17,6 +17,7 @@ model Card {
   link       String
   margin     Float
   percent    Float
+  isVisible  Boolean     @default(true)
   advantages Advantage[]
 }
 
