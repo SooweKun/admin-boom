@@ -9,7 +9,7 @@ export class CardService {
 
   /**
    * По умолчанию отдаёт только видимые карточки — это то, что показывает приложение.
-   * Админка запрашивает `includeHidden`, чтобы видеть и скрытые.
+   * Админка через `GET /cards/all` получает и скрытые.
    */
   async findAll(includeHidden = false) {
     try {
